@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MoviesController;
-
+use App\Http\Controllers\HomeController;
 
 Route::get('/movies/filter/{genre?}', function ($genre = null) {
     if ($genre) {
@@ -12,3 +12,6 @@ Route::get('/movies/filter/{genre?}', function ($genre = null) {
 });
 
 Route::resource('movies', MoviesController::class);
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+

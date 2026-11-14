@@ -1,12 +1,13 @@
-Lab # 11
+Lab # 13
 
-G1
-Route model binding needs two things to be true. Name both, and say what happens when only one of them is.
-- Two things must be true: the parameter is type-hinted with my model (Movie $movie), and its name matches the route segment ({movie}). If the name is wrong, I get an empty Movie with no error. If the type-hint is missing, I only get the plain id, so $movie->title crashes.
-G2
-Your Delete link opened the detail page instead of deleting anything. Explain why.
-- A link can only send GET. The show route answers GET at /movies/1, so the browser opened the detail page and nothing was deleted. Only a form with @method('DELETE') can send the DELETE that destroy needs.
-G3
-old() takes a second argument on your edit form. What would break if you left it out, and what would break if you used only it?
-- old('title', $movie->title) shows what I typed first, then the saved value. Without the second argument, the form opens empty. With only the second argument, a rejected edit would erase what I typed and bring back the original values.
+J1
+Your HomeController is not a resource controller. Name two things an index() on a resource controller does that yours does not have to.
+-A resource controller has other methods like create(), store(), show(), edit(), update(), and destroy(). My HomeController only uses index() to display the homepage, so it does not need those methods.
 
+J2
+Your pagination links lost the search term until you added one method. Say what those links contained before, and what the controller therefore received.
+-Before adding withQueryString(), the pagination links only contained the page number. The controller did not receive the previous search and filter values when I clicked the next page.
+
+J3
+A misspelled sort value does not break your page. Explain why that is worse than an error, and what your allowed list does about it.
+-It is worse because the page still loads but the movies may not be sorted correctly without showing an error. The allowed list checks the sort value and changes invalid values to the default column, which is title.

@@ -11,26 +11,41 @@ class MoviesController extends Controller
 {
     public function index(Request $request)
     {
-            $genre = $request->query('genre');
-            $year = $request->query('year');
+            $query = Movie::with('genre');
 
-            $genres = Genre::all();
+    $genre = $request->query('genre');
+    $year = $request->query('year');
+    $search = $request->query('search');
+    $availability = $request->query('is_available');
 
-            \Illuminate\Support\Facades\DB::enableQueryLog();
+    if ($genre) {
+        $query->where('genre_id', $genre);
+    }
 
-            $query = Movie::withh('genre');
+    if ($year) {
+        $query->where('year', $year);
+    }
 
-            if ($genre) {
-                $query = $query->where('genre_id', $genre);
-            }
+    if ($search !== null && $search !== '') {
+        $query->where('title', 'like', "%{$search}%");
+    }
 
-            if ($year) {
-                $query = $query->where('year', $year);
-            }
+    if ($availability !== null && $availability !== '') {
+        $query->where('is_available', $availability);
+    }
 
-            $movies = $query->get();
+    $sort = $request->query('sort', 'title');
 
-            return view('movies.index', compact('movies', 'genre', 'year', 'genres'));
+    if (!in_array($sort, ['title', 'year', 'rating'])) {
+    $sort = 'title';
+    }
+
+    $movies = $query->orderBy($sort)->paginate(5)->withQueryString();
+    $genres = Genre::all();
+
+    return view('movies.index', compact(
+        'movies', 'genres', 'genre', 'year'
+    ));
     }
 
     public function create()
